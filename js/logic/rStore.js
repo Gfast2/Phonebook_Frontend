@@ -29,10 +29,11 @@ export const addNewOne = payload => dispatch => {
       return alert("Add new contact to list failed!");
     }
     const oldList = store.getState().db.mainList;
+    let oList = (oldList.length === 1 && oldList[0][0] === '') ? [] : oldList;
     dispatch({
       type: 'UPDATE_MAINLIST',
       payload: [
-        ...oldList,
+        ...oList,
         [
           res['index'],
           payload['name'],
