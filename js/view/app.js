@@ -31,15 +31,15 @@ export default class App extends React.Component {
     if(mainList.length === 1 && mainList[0][0] === '') {
       return null;
     }
-    const delteThisItem = e => {
-      console.log(e.toString());
-      store.dispatch(deleteOne({'id':e.toString()}));
-    };
     return <Fragment>{
       mainList.map(
         e =>
         <li key={e[0]}>
-          {e[1]} : {e[2]}<button onClick={() => delteThisItem(e[0])}>X</button>
+            {e[1]} : {e[2]}
+            <button
+              onClick={
+                () => store.dispatch(deleteOne({ 'id': e[0].toString() }))
+            }>X</button>
         </li>
       )
     }</Fragment>
