@@ -22,6 +22,32 @@ export const initMainList = () => dispatch => {
   });
 };
 
+// Add a new contact into phonebook
+export const addNewOne = payload => dispatch => {
+  const cb = (err, res) => {
+    if(err) {
+      return alert("Add new contact to list failed!");
+    }
+    const oldList = store.getState().db.mainList;
+    dispatch({
+      type: 'UPDATE_MAINLIST',
+      payload: [
+        ...oldList,
+        [
+          res['index'],
+          payload['name'],
+          payload['number']
+        ]
+      ]
+    })
+  };
+  bnXhr({
+    cb,
+    req:'addone',
+    payload
+  })
+};
+
 const initState = {
   db: {
     mainList:[], // The phonebook list stored (cached) in frontend

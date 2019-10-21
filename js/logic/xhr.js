@@ -6,6 +6,7 @@ export default parent => {
   const qry = `http://${url}:${port}/`;
   const cb = parent.cb;   // callback for each command
   const req = parent.req; // Command to execute
+  const payload = parent.payload; // optional content of command
 
   const xhr = new XMLHttpRequest();
   xhr.ontimeout = e => cb(true, null);
@@ -36,7 +37,13 @@ export default parent => {
   };
 
   let u = qry + req;
-  xhr.open('GET', encodeURI(u), true);
-  xhr.timeout = 2000;
-  xhr.send();
+  if(req === 'init') {
+    xhr.open('GET', encodeURI(u), true);
+    xhr.timeout = 2000;
+    xhr.send();
+  } else if(req === 'addone') {
+    xhr.open('POST', encodeURI(u), true);
+    xhr.timeout = 2000;
+    xhr.send(JSON.stringify(payload));
+  }
 };
