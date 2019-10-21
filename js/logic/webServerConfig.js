@@ -1,4 +1,4 @@
 'use strict';
 
 export const webserverUrl = window.location.hostname;
-export const XMLHttpRequestPort = '8080';
+export const XMLHttpRequestPort = '8081';

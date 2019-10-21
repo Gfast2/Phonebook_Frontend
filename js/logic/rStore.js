@@ -1,24 +1,39 @@
 'use strict';
 
-import ioDigest from './xhr';
+import bnXhr from './xhr'; // backend access
 
 import { applyMiddleware, createStore, combineReducers, compose } from 'redux';
 import ReduxThunk from 'redux-thunk';
 
+// Function that query the whole phonebook from backend
+export const initMainList = () => dispatch => {
+  const cb = (err, res) => {
+    if(err) {
+      return alert("Initialization failed!");
+    }
+    dispatch({
+      type: 'UPDATE_MAINLIST',
+      payload: res['list']
+    });
+  };
+  bnXhr({
+    cb,
+    req:'init'
+  });
+};
+
 const initState = {
   db: {
-    outputStat: 0, // 7 digital output state, only being used in 'status' view.
-    freqStat: 0,
-    filelist: []   // on server side available file list
+    mainList:[], // The phonebook list stored (cached) in frontend
   }
 };
 
 const db = (state = {}, action) => {
   switch (action.type) {
-    case 'UPDATE_OUTPUT':
+    case 'UPDATE_MAINLIST':
       return {
         ...state,
-        outputStat: action.payload
+        mainList: action.payload
       };
     default:
       return state;
@@ -32,6 +47,6 @@ export let store = createStore(
   initState,
   compose(
     applyMiddleware(ReduxThunk),
-    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // devtool, Comment out when do production compiling
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // devtool, Comment out when do production compiling
   )
 );
