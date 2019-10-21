@@ -8,6 +8,12 @@ export default parent => {
   const req = parent.req; // Command to execute
   const payload = parent.payload; // optional content of command
 
+  let u = qry + req;
+  if (req === 'downloadlist'){
+    window.open(u);
+    return;
+  }
+
   const xhr = new XMLHttpRequest();
   xhr.ontimeout = e => cb(true, null);
 
@@ -36,12 +42,11 @@ export default parent => {
     }
   };
 
-  let u = qry + req;
-  if(req === 'init') {
+  if (req === 'init') {
     xhr.open('GET', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send();
-  } else if (req === 'addone' || req === 'deleteone') {
+  } else if (req === 'addone' || req === 'deleteone' || 'updateone') {
     xhr.open('POST', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send(JSON.stringify(payload));

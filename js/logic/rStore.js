@@ -61,7 +61,7 @@ export const deleteOne = payload => dispatch => {
     dispatch({
       type: 'UPDATE_MAINLIST',
       payload: oList
-    })
+    });
   };
   bnXhr({
     cb,
@@ -69,6 +69,39 @@ export const deleteOne = payload => dispatch => {
     payload
   })
 };
+
+// Update one contact
+export const updateOne = payload => dispatch => {
+  const cb = (err, res) => {
+    if (err || res['result'] === 'failed') {
+      return alert("Update contact failed!");
+    }
+    const id = payload['id'];
+    const oldList = store.getState().db.mainList;
+    const oList = oldList.map(e => {
+      if(e[0].toString() === id) {
+        return [id, payload['name'], payload['number']];
+      }
+      return e;
+    });
+    dispatch({
+      type: 'UPDATE_MAINLIST',
+      payload: oList
+    });
+  }
+  bnXhr({
+    cb,
+    req:'updateone',
+    payload
+  });
+};
+
+export const listDownload = () => {
+  bnXhr({
+    cb: ()=>{},
+    req:'downloadlist'
+  });
+}
 
 const initState = {
   db: {

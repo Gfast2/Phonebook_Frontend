@@ -9,6 +9,8 @@ import {
   initMainList,
   addNewOne,
   deleteOne,
+  updateOne,
+  listDownload,
  } from '../logic/rStore';
 
 @connect(store =>
@@ -31,11 +33,43 @@ export default class App extends React.Component {
     if(mainList.length === 1 && mainList[0][0] === '') {
       return null;
     }
+    const updateThis = e => {
+      const oName = e[1];
+      const oNumber = e[2];
+      const index = e[0].toString();
+      const nName = prompt('Enter new name', oName);
+      const nNumber = prompt('Enter new number', oNumber);
+      if (nName === null || nName === '' || nNumber === null || nName === ''){
+        return alert('Name or number can not be empty, please try again.');
+      }
+      const { mainList } = this.props;
+      let existName = false;
+      let existNumber = false;
+      mainList.map(ele => {
+        if(ele[0].toString() !== index) {
+          if (ele[1] === nName) {
+            existName = true;
+          }
+          if (ele[2] === nNumber) {
+            existNumber = true;
+          }
+        }
+      });
+      if(existName || existNumber) {
+        return alert("New name or number is already exist, and it belonges to \
+        others, please try again.");
+      }
+      store.dispatch(updateOne({
+        'id':index,
+        'name':nName,
+        'number':nNumber
+      }))
+    };
     return <Fragment>{
       mainList.map(
         e =>
         <li key={e[0]}>
-            {e[1]} : {e[2]}
+            <span onClick={() => updateThis(e)}>{e[1]} : {e[2]}</span>
             <button
               onClick={
                 () => store.dispatch(deleteOne({ 'id': e[0].toString() }))
@@ -48,9 +82,9 @@ export default class App extends React.Component {
   addaNewContact() {
     const { mainList } = this.props;
     let unique=true;
-    let name = prompt("Enter a new name");
-    let number = prompt("Enter a new number");
-    if (name === '' || number === '') {
+    let name = prompt('Enter a new name');
+    let number = prompt('Enter a new number');
+    if (name === '' || name === null || number === '' ||number === '') {
       return alert(`Name or number can't empty, please try again.`);
     }
     if (mainList.length === 1 && mainList[0][0] === '') {
@@ -73,7 +107,7 @@ export default class App extends React.Component {
     return <ul>
       {this.generateAvailableContacts()}
       <li><button onClick={this.addaNewContact}>Add New One</button></li>
-      <li><button>Download All</button></li>
+      <li><button onClick={listDownload}>Download All</button></li>
       <li><button>Upload new phonebook</button></li>
     </ul>
   }
