@@ -41,7 +41,7 @@ export default parent => {
     xhr.open('GET', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send();
-  } else if(req === 'addone') {
+  } else if (req === 'addone' || req === 'deleteone') {
     xhr.open('POST', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send(JSON.stringify(payload));

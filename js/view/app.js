@@ -8,6 +8,7 @@ import {
   store,
   initMainList,
   addNewOne,
+  deleteOne,
  } from '../logic/rStore';
 
 @connect(store =>
@@ -30,9 +31,18 @@ export default class App extends React.Component {
     if(mainList.length === 1 && mainList[0][0] === '') {
       return null;
     }
-    return <Fragment>
-      {mainList.map(e => <li key={e[0]}>{e[1]} : {e[2]}</li>)}
-    </Fragment>
+    const delteThisItem = e => {
+      console.log(e.toString());
+      store.dispatch(deleteOne({'id':e.toString()}));
+    };
+    return <Fragment>{
+      mainList.map(
+        e =>
+        <li key={e[0]}>
+          {e[1]} : {e[2]}<button onClick={() => delteThisItem(e[0])}>X</button>
+        </li>
+      )
+    }</Fragment>
   }
 
   addaNewContact() {

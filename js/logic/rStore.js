@@ -25,7 +25,7 @@ export const initMainList = () => dispatch => {
 // Add a new contact into phonebook
 export const addNewOne = payload => dispatch => {
   const cb = (err, res) => {
-    if(err) {
+    if(err || res['result'] === 'failed') {
       return alert("Add new contact to list failed!");
     }
     const oldList = store.getState().db.mainList;
@@ -45,6 +45,27 @@ export const addNewOne = payload => dispatch => {
   bnXhr({
     cb,
     req:'addone',
+    payload
+  })
+};
+
+// Delete a old contact from phonebook
+export const deleteOne = payload => dispatch => {
+  const cb = (err, res) => {
+    if (err || res['result'] === 'failed') {
+      return alert("Delete contact failed!");
+    }
+    const id = payload['id'];
+    const oldList = store.getState().db.mainList;
+    let oList = oldList.filter(e => e[0].toString() !== id);
+    dispatch({
+      type: 'UPDATE_MAINLIST',
+      payload: oList
+    })
+  };
+  bnXhr({
+    cb,
+    req: 'deleteone',
     payload
   })
 };
