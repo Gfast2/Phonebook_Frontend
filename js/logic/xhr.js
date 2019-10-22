@@ -38,6 +38,7 @@ export default parent => {
       }
       else {
         console.log("xhr resolves error code: " + xhr.status);
+        cb(true, "");
       }
     }
   };
