@@ -11,6 +11,7 @@ import {
   deleteOne,
   updateOne,
   listDownload,
+  listUpload,
  } from '../logic/rStore';
 
 @connect(store =>
@@ -103,12 +104,28 @@ export default class App extends React.Component {
     alert(`Name ${name} and number ${number} are not unique, please try again.`);
   }
 
+  uploadForm(){
+    return <form
+      action='onenewlist'
+      method='POST'
+      encType='multipart/form-data'
+      id='fileuploadform'
+      className='invisible'
+      >
+      <input type='file' name='filetoupload' id='fs_bro'
+      onChange={() => store.dispatch(listUpload())} /><br />
+    </form>;
+  }
+
   render() {
     return <ul>
+      <li>{this.uploadForm()}</li>
       {this.generateAvailableContacts()}
       <li><button onClick={this.addaNewContact}>Add New One</button></li>
       <li><button onClick={listDownload}>Download All</button></li>
-      <li><button>Upload new phonebook</button></li>
+      <li><button onClick={
+        () => document.getElementById("fs_bro").click()
+        }>Upload new phonebook</button></li>
     </ul>
   }
 }

@@ -46,9 +46,15 @@ export default parent => {
     xhr.open('GET', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send();
-  } else if (req === 'addone' || req === 'deleteone' || 'updateone') {
+  } else if (req === 'addone' || req === 'deleteone' || req === 'updateone') {
     xhr.open('POST', encodeURI(u), true);
     xhr.timeout = 2000;
     xhr.send(JSON.stringify(payload));
+  } else if (req === 'onenewlist') {
+    const uploadForm = document.getElementById('fileuploadform');
+    const fData = new FormData(uploadForm);
+    xhr.open('POST', encodeURI(u), true);
+    xhr.timeout = 2000;
+    xhr.send(fData);
   }
 };

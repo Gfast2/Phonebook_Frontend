@@ -96,12 +96,59 @@ export const updateOne = payload => dispatch => {
   });
 };
 
+// Let user download all contacts as a plain file
 export const listDownload = () => {
   bnXhr({
     cb: ()=>{},
     req:'downloadlist'
   });
-}
+};
+
+export const listUpload = () => dispatch => {
+  const cb = (err, res) => {
+    const fileInput = document.getElementById('fs_bro');
+    fileInput.value = "";
+    if (err || res['result'] === 'failed') {
+      return alert("Upload contact list failed. Please check if its syntax" +
+      "is correct and upload again.");
+    }
+    const lAdd = res['addlist'];
+    const lDel = res['deletelist'];
+    const lUpdate = res['updatelist'];
+    const oldList = store.getState().db.mainList;
+    let oList = oldList.length === 1 && oldList[0][0] === '' ? [] : oldList;
+    const newList_without_del = oList.filter(e => {
+      let shouldStay = true;
+      lDel.map(ele => {
+        if(ele[0].toString() === e[0].toString()){
+          shouldStay = false
+        }
+      });
+      return shouldStay;
+    });
+    const newList_with_update = newList_without_del.map(e => {
+      let newContact = [];
+      lUpdate.map(ele => {
+        if(e[0].toString() === ele[0].toString()){
+          newContact = ele;
+        }
+      });
+      if(newContact.length !== 0) {
+        return newContact;
+      }
+      return e;
+    });
+    const newList_with_add = [...newList_with_update, ...lAdd];
+    dispatch({
+      type: 'UPDATE_MAINLIST',
+      payload: newList_with_add
+    });
+  };
+  bnXhr({
+    cb,
+    req:'onenewlist'
+  });
+};
 
 const initState = {
   db: {
