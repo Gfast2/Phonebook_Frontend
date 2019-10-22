@@ -3,6 +3,11 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import '../../css/style.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPhoneAlt, faArrowCircleDown, faPlusCircle, faArrowCircleUp,faHatWizard } from '@fortawesome/free-solid-svg-icons'
+library.add(faPhoneAlt, faArrowCircleDown, faPlusCircle, faArrowCircleUp,faHatWizard);
 import '@babel/polyfill'; // For IE11, 'Promise'
 import {
   store,
@@ -69,12 +74,16 @@ export default class App extends React.Component {
     return <Fragment>{
       mainList.map(
         e =>
-        <li key={e[0]}>
-            <span onClick={() => updateThis(e)}>{e[1]} : {e[2]}</span>
-            <button
+          <li key={e[0]} className='list-group-item'>
+            <h2>{e[1]}</h2>
+            <div className='text-muted'><FontAwesomeIcon icon={faPhoneAlt}/> {e[2]}</div>
+            <br></br>
+            <button className='btn btn-sm btn-outline-danger'
               onClick={
                 () => store.dispatch(deleteOne({ 'id': e[0].toString() }))
-            }>X</button>
+            }>Delete</button>{' '}
+            <button className='btn btn-sm btn-outline-primary'
+              onClick={ () => updateThis(e) }>Edit</button>
         </li>
       )
     }</Fragment>
@@ -118,14 +127,35 @@ export default class App extends React.Component {
   }
 
   render() {
-    return <ul>
-      <li>{this.uploadForm()}</li>
-      {this.generateAvailableContacts()}
-      <li><button onClick={this.addaNewContact}>Add New One</button></li>
-      <li><button onClick={listDownload}>Download All</button></li>
-      <li><button onClick={
-        () => document.getElementById("fs_bro").click()
-        }>Upload new phonebook</button></li>
-    </ul>
+    return <div className='container'>
+      <div className='panel-collapse collapse show'>
+        <ul className='list-group shadow bg-white rounded'>
+          <li className='list-group-item text-center bg-secondary text-light font-italic'>
+            <h3>
+              <FontAwesomeIcon icon={faHatWizard} /> Su's Phonebook Demo
+            </h3>
+          </li>
+          {this.generateAvailableContacts()}
+          <li className='list-group-item'>
+            <button onClick={this.addaNewContact} className='btn btn-success'>
+              <FontAwesomeIcon icon={faPlusCircle} /> Add a new Contact
+            </button>
+          </li>
+          <li className='list-group-item'>
+            <button onClick={listDownload} className='btn btn-primary'>
+              <FontAwesomeIcon icon={faArrowCircleDown} /> Download the whole Phonebook
+            </button>
+          </li>
+          <li className='list-group-item'>
+            <button onClick={
+              () => document.getElementById("fs_bro").click()
+            } className='btn btn-warning'>
+              <FontAwesomeIcon icon={faArrowCircleUp} /> Upload a new Phonebook
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div className='divst-group-item'>{this.uploadForm()}</div>
+    </div>
   }
 }
